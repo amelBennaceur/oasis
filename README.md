@@ -1,2 +1,2 @@
 # oasis
-OASIS (Obligations, Attack scenarios, SpecIfication abstraction, and Synthesis)
+Weakening User Obligations for Security-critical Systems
