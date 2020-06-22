@@ -1,0 +1,41 @@
+range VoterN = 1..13
+range EON = 1..13
+
+//e-Voting Machine (EM)
+EM = (password->P1),
+P1 = (select -> P2),
+P2 = (vote -> P3 | back -> P1),
+P3 = (confirm -> END  | back -> P2).
+
+// Now we walk through the algorithm, 
+// taking EM as M1
+// First, we create M using L = {password}
+minimal||M = EM\{password}.
+
+// Now we create N
+minimal||N = EM@{password}.
+
+// Construct F 
+||F = (M||N).
+
+// Partial S saying we want password action only once in a trace
+S1 = (back->back->END).
+
+//Weakened User Behaviour
+User = (enter -> IAct),
+IAct = (password -> IAct |  select -> IAct | vote -> IAct | back -> IAct | confirm -> IAct | exit -> User ).
+
+Booth = (v[i:VoterN].enter -> v[i].exit -> Booth | eo[j:EON].enter -> eo[j].exit -> Booth).
+
+minimal||Sys0 = ({v[i:VoterN]}::F || v[i:VoterN]:User)@{v[i:VoterN].enter,v[i:VoterN].password,v[i:VoterN].select,v[i:VoterN].vote,v[i:VoterN].back,v[i:VoterN].confirm,v[i:VoterN].exit}.
+
+minimal||Sys1 = ({eo[j:EON]}::F || eo[j:EON]:User)@{eo[j:EON].enter,eo[j:EON].select,eo[j:EON].vote,eo[j:EON].back,eo[j:EON].confirm,eo[j:EON].exit}.
+
+||Env = (Booth||Sys0||Sys1||{v[i:VoterN],eo[j:EON]}::F).
+
+// Now we consider the security requirement Rs
+property NoEOConfirm = (v[i:VoterN].confirm -> NoEOConfirm).
+
+minimal||C1 = (Env || NoEOConfirm).
+
+assert NoEOSelectAfterVPassword = [](v[i:VoterN].password -> [](!eo[j:EON].select))

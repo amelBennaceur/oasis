@@ -1,0 +1,38 @@
+//e-Voting Machine (EM)
+EM = (password->P1),
+P1 = (select -> P2),
+P2 = (vote -> P3 | back -> P1),
+P3 = (confirm -> END  | back -> P2).
+
+// Now we walk through the algorithm, 
+// taking EM as M1
+// First, we create M using L = {password}
+minimal||M = EM\{password}.
+
+// Now we create N
+minimal||N = EM@{password}.
+
+// Construct F 
+||F = (M||N).
+
+// Partial S saying we want password action only once in a trace
+S1 = (back->back->END).
+
+//Weakened User Behaviour
+User = (enter -> IAct),
+IAct = (password -> IAct |  select -> IAct | vote -> IAct | back -> IAct | confirm -> IAct | exit -> User ).
+
+Booth = (v.enter -> v.exit -> Booth | eo.enter -> eo.exit -> Booth).
+
+minimal||Sys0 = ({v}::F || v:User)@{v.enter,v.password,v.select,v.vote,v.back,v.confirm,v.exit}.
+
+minimal||Sys1 = ({eo}::F || eo:User)@{eo.enter,eo.select,eo.vote,eo.back,eo.confirm,eo.exit}.
+
+||Env = (Booth||Sys0||Sys1||{v,eo}::F).
+
+// Now we consider the security requirement Rs
+property NoEOConfirm = (v.confirm -> NoEOConfirm).
+
+minimal||C1 = (Env || NoEOConfirm).
+
+assert NoEOSelectAfterVPassword = [](v.password -> [](!eo.select))

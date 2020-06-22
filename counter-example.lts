@@ -1,0 +1,53 @@
+//e-Voting Machine (EM)
+EM = (password->P1),
+P1 = (select -> P2),
+P2 = (vote -> P3 | back -> P1),
+P3 = (confirm -> END  | back -> P2).
+
+//Weakened User Behaviour
+User = (enter -> IAct),
+IAct = (password -> IAct |  select -> IAct | vote -> IAct | back -> IAct | confirm -> IAct | exit -> User ).
+
+Booth = (v.enter -> v.exit -> Booth | eo.enter -> eo.exit -> Booth).
+
+minimal||Sys0 = ({v}::EM || v:User)@{v.enter,v.password,v.select,v.vote,v.back,v.confirm,v.exit}.
+
+minimal||Sys1 =  ({eo}::User). //({eo}::EM || eo:User)@{eo.enter,eo.select,eo.vote,eo.back,eo.confirm,eo.exit}.
+
+||Env = ( Booth||Sys0||Sys1||{v,eo}::EM).
+
+// Generate attack scenarios from the security requirement
+// that the election official can't select candidate after 
+// the voter has voted, but
+// the property does not hold.
+assert NoEOSelectAfterVPassword = [](v.vote -> [](!eo.select))
+
+
+
+//e-Voting Machine (EM)
+EM = (password->P1),
+P1 = (select -> P2),
+P2 = (vote -> P3 | back -> P1),
+P3 = (confirm -> END  | back -> P2).
+
+//minimal||M = EM\{password}.
+minimal||EM2 = {v,eo}::EM\{eo.password}.
+
+//Weakened User Behaviour
+User = (enter -> IAct),
+IAct = (password -> IAct |  select -> IAct | vote -> IAct | back -> IAct | confirm -> IAct | exit -> User ).
+
+Booth = (v.enter -> v.exit -> Booth | eo.enter -> eo.exit -> Booth).
+
+||Sys0 = ({v}::EM || v:User)@{v.enter,v.password,v.select,v.vote,v.back,v.confirm,v.exit}.
+
+||Sys1 = ({eo}::EM || eo:User)@{eo.enter,eo.select,eo.vote,eo.back,eo.confirm,eo.exit}.
+
+
+||Env = ( Booth||Sys0||Sys1||EM2).
+
+// Generate attack scenarios from the security requirement
+// that the election official can't select candidate after 
+// the voter has voted, but
+// the property does not hold.
+assert NoEOSelectAfterVPassword = [](v.vote -> [](!eo.select))

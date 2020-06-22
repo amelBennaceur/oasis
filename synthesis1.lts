@@ -1,0 +1,23 @@
+//e-Voting Machine (EM)
+EM = (password->P1),
+P1 = (select -> P2),
+P2 = (vote -> P3 | back -> P1),
+P3 = (confirm -> END  | back -> P2).
+
+//Weakened User Behaviour
+User = (enter -> IAct),
+IAct = (password -> IAct |  select -> IAct | vote -> IAct | back -> IAct | confirm -> IAct | exit -> User ).
+
+Booth = (v.enter -> v.exit -> Booth | eo.enter -> eo.exit -> Booth).
+
+minimal||Sys0 = ({v}::EM || v:User)@{v.enter,v.password,v.select,v.vote,v.back,v.confirm,v.exit}.
+
+minimal||Sys1 = ({eo}::EM || eo:User)@{eo.enter,eo.select,eo.vote,eo.back,eo.confirm,eo.exit}.
+
+||Env = ( Booth||Sys0||Sys1||{v,eo}::EM).
+
+// Now we consider the security requirement Rs
+property NoEOConfirm = (v.select -> v.exit -> END).
+
+minimal||C1 = (Env || NoEOConfirm)@{v.password,v.select,v.vote,v.back,v.confirm,eo.select,eo.vote,eo.back,eo.confirm}.
+
