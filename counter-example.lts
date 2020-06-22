@@ -43,7 +43,6 @@ Booth = (v.enter -> v.exit -> Booth | eo.enter -> eo.exit -> Booth).
 
 ||Sys1 = ({eo}::EM || eo:User)@{eo.enter,eo.select,eo.vote,eo.back,eo.confirm,eo.exit}.
 
-
 ||Env = ( Booth||Sys0||Sys1||EM2).
 
 // Generate attack scenarios from the security requirement

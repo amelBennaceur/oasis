@@ -19,5 +19,4 @@ minimal||Sys1 = ({eo}::EM || eo:User)@{eo.enter,eo.select,eo.vote,eo.back,eo.con
 // Now we consider the security requirement Rs
 property NoEOConfirm = (v.select -> v.exit -> END).
 
-minimal||C1 = (Env || NoEOConfirm)@{v.password,v.select,v.vote,v.back,v.confirm,eo.select,eo.vote,eo.back,eo.confirm}.
-
+minimal||C1 = (Env || NoEOConfirm)@{v.password,v.select,v.vote,v.back,v.confirm,eo.select,eo.vote,eo.back,eo.confirm}.    

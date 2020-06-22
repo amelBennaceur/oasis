@@ -37,5 +37,6 @@ minimal||Sys1 = ({eo[j:EON]}::F || eo[j:EON]:User)@{eo[j:EON].enter,eo[j:EON].se
 property NoEOConfirm = (v[i:VoterN].confirm -> NoEOConfirm).
 
 minimal||C1 = (Env || NoEOConfirm).
-
+   
+   
 assert NoEOSelectAfterVPassword = [](v[i:VoterN].password -> [](!eo[j:EON].select))
